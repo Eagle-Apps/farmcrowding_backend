@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema({
     phone: { type: String, minlength: 10, maxlength: 11 },
     address: { type: String, required: true },
     sudoName: { type: String },
+    role: { type: String, default: "user" },
     investments: [{
         type: mongoose.Types.ObjectId,
         ref: "investments"

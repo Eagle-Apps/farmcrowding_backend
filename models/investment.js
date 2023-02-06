@@ -3,13 +3,14 @@ const mongoose = require('mongoose');
 const InvestmentSchema = new mongoose.Schema({
     title: { type: String, required: true, trim: true },
     images: { type: Array },
+    descp: { type: String },
     status: { type: String, default: "inactive", enum: ['inactive', 'active'] },
     verified: { type: Boolean, default: false },
     phone: { type: String, minlength: 10, maxlength: 11 },
     rating: { type: Number, min: 1, max: 5 },
     budget: { type: String },
     owner: {
-        ownerId: {
+        userId: {
             type: mongoose.Types.ObjectId,
             ref: "users"
         },

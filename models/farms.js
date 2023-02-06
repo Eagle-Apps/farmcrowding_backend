@@ -7,7 +7,7 @@ const FarmSchema = new mongoose.Schema({
     status: { type: String, default: "inactive", enum: ['inactive', 'active'], },
     verified: { type: Boolean, default: false },
     phone: { type: String, minlength: 10, maxlength: 11 },
-    owner: {
+    userId: {
         type: mongoose.Types.ObjectId,
         ref: "users"
     },

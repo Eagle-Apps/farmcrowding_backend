@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const ForumSchema = new mongoose.Schema({
     message: { type: String, required: true, trim: true },
-    user_id: {
+    userId: {
         type: mongoose.Types.ObjectId,
         ref: "users"
     },

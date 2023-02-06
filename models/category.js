@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const CategorySchema = new mongoose.Schema({
     title: { type: String, required: true, trim: true },
     alias: { type: String, required: true, trim: true, unique: true },
-    createdBy: {
+    userId: {
         type: mongoose.Types.ObjectId,
         ref: "users"
     }

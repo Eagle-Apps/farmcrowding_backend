@@ -5,7 +5,7 @@ const SupplySchema = new mongoose.Schema({
     location: { type: Array, required: true },
     origin: { type: String, required: true, trim: true },
     orderNumber: { type: String, required: true, trim: true },
-    user_id: {
+    userId: {
         type: mongoose.Types.ObjectId,
         ref: "users"
     },
