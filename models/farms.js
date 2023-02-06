@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const FarmSchema = new mongoose.Schema({
     name: { type: String, required: true, trim: true },
     address: { type: String, unique: true, required: true },
-    email: { type: String, unique: true, required: true, trim: true },
-    password: { type: String, minlength: 8, trim: true, required: true },
     images: { type: Array },
     status: { type: String, default: "inactive", enum: ['inactive', 'active'], },
     verified: { type: Boolean, default: false },

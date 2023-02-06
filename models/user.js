@@ -8,10 +8,10 @@ const UserSchema = new mongoose.Schema({
     phone: { type: String, minlength: 10, maxlength: 11 },
     address: { type: String, required: true },
     sudoName: { type: String },
-    investments: {
+    investments: [{
         type: mongoose.Types.ObjectId,
         ref: "investments"
-    }
+    }]
 }, {
     toJSON: {
         transform(doc, ret) {

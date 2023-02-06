@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const InvestmentSchema = new mongoose.Schema({
     title: { type: String, required: true, trim: true },
-    password: { type: String, minlength: 8, trim: true, required: true },
     images: { type: Array },
     status: { type: String, default: "inactive", enum: ['inactive', 'active'] },
     verified: { type: Boolean, default: false },
