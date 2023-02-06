@@ -39,7 +39,7 @@ const authorize = (req, res, next) => {
 const access = () => {
     return (req, res, next) => {
         if (!req.userId.role === "admin") {
-            return next(new ErrorResponse(`the user is not authorized to visit this route`, 403))
+            return next(new ErrorResponse(`the ${req.userId.role} is not authorized to visit this route`, 403))
         }
         next()
     }
