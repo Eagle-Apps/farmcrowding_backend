@@ -60,8 +60,6 @@ let routes = (app) => {
                 console.log(err)
                 res.json({ msg: "Error occurred" })
             } else {
-                console.log(req.files)
-                console.log(req.body)
                 if (req.files) {
                     const reqFiles = [];
                     for (let i = 0; i < req.files.length; i++) {
