@@ -15,7 +15,7 @@ let routes = (app) => {
 
     app.get('/category', async (req, res) => {
         try {
-            let category = await Category.find()
+            let category = await Category.find().sort({ title: 1 })
                 .populate("userId", "name role")
             res.json(category)
         }
