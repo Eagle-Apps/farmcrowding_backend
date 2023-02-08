@@ -50,9 +50,6 @@ async function uploadToCloudinary(locaFilePath) {
         });
 };
 
-
-
-
 let routes = (app) => {
     app.post('/farm', async (req, res) => {
         upload(req, res, async (err) => {
