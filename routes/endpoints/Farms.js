@@ -94,9 +94,9 @@ let routes = (app) => {
     // get active farms according to categories
     app.get('/farms-by-category', async (req, res) => {
         try {
-            let farms = await Farm.find({ status: "active", category_id: req.query.category }).sort({ createdAt: -1 })
-                .populate("user_id", "firstname lastname")
-                .populate("category_id", "title")
+            let farms = await Farm.find({ category: req.query.category }).sort({ name: 1 })
+                .populate("userId", "name")
+                .populate("category", "title")
             res.json(farms)
         }
         catch (err) {
@@ -104,12 +104,12 @@ let routes = (app) => {
         }
     });
 
-    // get all active farms
+    // get all farms
     app.get('/farms', async (req, res) => {
         try {
             let farms = await Farm.find().sort({ name: 1 })
-            // .populate("user_id", "firstname lastname ")
-            // .populate("category_id", "title")
+                .populate("userId", "name")
+                .populate("category", "title")
             res.json(farms)
         }
         catch (err) {
@@ -117,12 +117,24 @@ let routes = (app) => {
         }
     });
 
-    // get latest 8 farms
-    app.get('/farm-8', async (req, res) => {
+    // get inactive 4 farms
+    app.get('/farms/inactive', async (req, res) => {
         try {
-            let farms = await Farm.find().sort({ createdAt: -1 }).limit(8)
-                .populate("user_id", "firstname lastname role")
-                .populate("category_id", "title")
+            let farms = await Farm.find({ status: "inactive" }).sort({ name: 1 }).limit(4)
+                .populate("userId", "name")
+                .populate("category", "title")
+            res.json(farms)
+        }
+        catch (err) {
+            res.status(500).send(err)
+        }
+    });
+    // get all active farms
+    app.get('/farms/active', async (req, res) => {
+        try {
+            let farms = await Farm.find({ status: "active" }).sort({ name: 1 })
+                .populate("userId", "name")
+                .populate("category", "title")
             res.json(farms)
         }
         catch (err) {
@@ -133,8 +145,8 @@ let routes = (app) => {
     app.get('/farm/:id', async (req, res) => {
         try {
             let farm = await Farm.findOne({ _id: req.params.id })
-                .populate("user_id", "firstname lastname")
-                .populate("category_id", "title")
+                .populate("userId", "name")
+                .populate("category", "title")
             res.json(farm)
         }
         catch (err) {
@@ -144,7 +156,7 @@ let routes = (app) => {
 
     app.delete('/farm/:id', async (req, res) => {
         try {
-            await Farm.deleteOne()
+            await Farm.deleteOne({ _id: req.params.id })
             res.json({ msg: "Farm Deleted" })
         }
         catch (err) {
