@@ -2,6 +2,7 @@ const Farm = require('../../models/farms');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const path = require('path');
+// const upl=require('../../uploads')
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
