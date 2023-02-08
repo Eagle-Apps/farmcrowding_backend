@@ -15,7 +15,7 @@ const upload = multer({ storage: storage }).single('image');
 let routes = (app) => {
     app.post("/register", async (req, res) => {
         try {
-            const { firstname, lastname, email, password, phone, userName } = req.body;
+            const { firstname, lastname, email, password, phone, userName, address } = req.body;
 
             if (!firstname || !lastname || !email || !password || !userName)
                 return res.status(400).json({ msg: "Please fill in all fields, one or more fileds are empty!" })
@@ -35,7 +35,7 @@ let routes = (app) => {
             const passwordHash = await bcrypt.hash(password, 12)
             let name = firstname + " " + lastname;
             const newUser = {
-                name, email, password: passwordHash, phone, userName
+                name, email, password: passwordHash, phone, userName, address
             }
             let user_ = new User(newUser);
             // const activation_token = createActivationToken(newUser)
