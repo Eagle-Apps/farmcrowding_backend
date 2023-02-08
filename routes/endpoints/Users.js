@@ -35,7 +35,7 @@ let routes = (app) => {
             const passwordHash = await bcrypt.hash(password, 12)
             let name = firstname + " " + lastname;
             const newUser = {
-                name, email, password: passwordHash, phone
+                name, email, password: passwordHash, phone, userName
             }
             let user_ = new User(newUser);
             // const activation_token = createActivationToken(newUser)
