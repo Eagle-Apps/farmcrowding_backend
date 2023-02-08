@@ -63,6 +63,9 @@ let routes = (app) => {
             if (!validateEmail(email))
                 return res.status(400).json({ msg: "Please enter a valid email address!" })
 
+            const user_name = await User.findOne({ userName })
+            if (user_name) return res.status(400).json({ msg: "This username is already taken!" })
+
             const user = await User.findOne({ email })
             if (user) return res.status(400).json({ msg: "This email already exists, please use another email address!" })
 
