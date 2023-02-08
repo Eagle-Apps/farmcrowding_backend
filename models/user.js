@@ -7,8 +7,9 @@ const UserSchema = new mongoose.Schema({
     image: { type: String },
     phone: { type: String, minlength: 10, maxlength: 11 },
     address: { type: String, required: true },
-    sudoName: { type: String },
+    userName: { type: String, required: true, trim: true },
     role: { type: String, default: "user" },
+    status: { type: String, default: "inactive" },
     investments: [{
         type: mongoose.Types.ObjectId,
         ref: "investments"
