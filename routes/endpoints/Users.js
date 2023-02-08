@@ -56,7 +56,7 @@ let routes = (app) => {
 
     app.post("/register/admin", async (req, res) => {
         try {
-            const { firstname, lastname, email, password, phone } = req.body;
+            const { firstname, lastname, email, password, phone, userName, address } = req.body;
             if (!firstname || !lastname || !email || !password)
                 return res.status(400).json({ msg: "Please fill in all fields, one or more fileds are empty!" })
 
@@ -72,7 +72,7 @@ let routes = (app) => {
             const passwordHash = await bcrypt.hash(password, 12)
             let name = firstname + " " + lastname;
             const newUser = {
-                name, email, password: passwordHash, phone, role: "admin"
+                name, email, password: passwordHash, phone, role: "admin", userName, address
             }
 
             let user_ = new User(newUser);
