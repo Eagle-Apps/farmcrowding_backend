@@ -133,7 +133,7 @@ let routes = (app) => {
     // to suspend user
     app.put('/suspend-user/:id', async (req, res) => {
         try {
-            let user = await User.updateOne({ _id: req.params.id }, { status: "suspended" }, { returnOriginal: false });
+            await User.updateOne({ _id: req.params.id }, { status: "suspended" }, { returnOriginal: false });
             return res.json({ msg: "User Suspended" })
         }
         catch (err) {
@@ -144,7 +144,7 @@ let routes = (app) => {
     // to remove user from suspension
     app.put('/revoke-user/:id', async (req, res) => {
         try {
-            let user = await User.updateOne({ _id: req.params.id }, { status: "inactive" }, { returnOriginal: false });
+            await User.updateOne({ _id: req.params.id }, { status: "inactive" }, { returnOriginal: false });
             return res.json({ msg: "Suspension Revoked" })
         }
         catch (err) {
