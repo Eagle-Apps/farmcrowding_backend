@@ -83,9 +83,7 @@ let routes = (app) => {
         });
     });
 
-
-
-    // get active farms according to categories
+    // get farms according to categories
     app.get('/farms-by-category', async (req, res) => {
         try {
             let farms = await Farm.find({ category: req.query.category }).sort({ name: 1 })
@@ -123,10 +121,11 @@ let routes = (app) => {
             res.status(500).send(err)
         }
     });
-    // get all active farms
-    app.get('/farms/active', async (req, res) => {
+
+    // get farms according to status
+    app.get('/farm', async (req, res) => {
         try {
-            let farms = await Farm.find({ status: "active" }).sort({ name: 1 })
+            let farms = await Farm.find({ status: req.query.status }).sort({ name: 1 })
                 .populate("userId", "name")
                 .populate("category", "title")
             res.json(farms)
