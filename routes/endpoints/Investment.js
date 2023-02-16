@@ -87,7 +87,7 @@ let routes = (app) => {
     // get all active investments
     app.get('/investments', async (req, res) => {
         try {
-            let Investments = await Investment.find({ status: "active" }).sort({ createdAt: -1 })
+            let Investments = await Investment.find().sort({ createdAt: -1 })
                 .populate("user_id", "firstname lastname ")
                 .populate("category_id", "title")
             res.json(Investments)
