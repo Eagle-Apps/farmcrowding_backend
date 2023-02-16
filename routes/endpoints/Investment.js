@@ -85,7 +85,7 @@ let routes = (app) => {
     });
 
     // get all active investments
-    app.get('/investments', async (req, res) => {
+    app.get('/investments/active', async (req, res) => {
         try {
             let Investments = await Investment.find({ status: "active" }).sort({ createdAt: -1 })
                 .populate("category_id", "title")
@@ -99,8 +99,8 @@ let routes = (app) => {
     // get all investments
     app.get('/investments', async (req, res) => {
         try {
-            let Investments = await Investment.find().sort({ createdAt: -1 })
-                .populate("category_id", "title")
+            let Investments = await Investment.find()
+                .populate("category", "title")
             res.json(Investments)
         }
         catch (err) {
