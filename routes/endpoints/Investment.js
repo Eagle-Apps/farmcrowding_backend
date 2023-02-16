@@ -65,9 +65,9 @@ let routes = (app) => {
                     }
                     req.body.images = reqFiles;
                     try {
-                        const { images, userId, budget, roi } = req.body;
-                        if (!userId)
-                            return res.status(500).json({ msg: "Please Login In" })
+                        const { images, budget, roi } = req.body;
+                        // if (!userId)
+                        //     return res.status(500).json({ msg: "Please Login In" })
                         if (!images)
                             return res.status(500).json({ msg: "Please Upload Investment Image" })
                         let newInvestment = new Investment(req.body);
