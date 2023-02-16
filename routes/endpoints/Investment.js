@@ -54,7 +54,7 @@ let routes = (app) => {
         upload(req, res, async (err) => {
             if (err) {
                 console.log(err)
-                res.json({ msg: "File Missing " })
+                return res.json({ msg: "File Missing " })
             } else {
                 if (req.files) {
                     const reqFiles = [];
@@ -77,7 +77,7 @@ let routes = (app) => {
 
                     }
                     catch (err) {
-                        return res.status(500).send(err);
+                        return res.status(500).send({ msg: "Missing fields" });
                     }
                 }
             }

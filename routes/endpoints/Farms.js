@@ -1,6 +1,7 @@
 const Farm = require('../../models/farms');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
+const paginate = require('jw-paginate');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -89,6 +90,7 @@ let routes = (app) => {
             let farms = await Farm.find({ category: req.query.category }).sort({ name: 1 })
                 .populate("userId", "name")
                 .populate("category", "title")
+
             res.json(farms)
         }
         catch (err) {
@@ -102,7 +104,13 @@ let routes = (app) => {
             let farms = await Farm.find().sort({ name: 1 })
                 .populate("userId", "name")
                 .populate("category", "title")
-            res.json(farms)
+            const page = parseInt(req.query.page) || 1;
+            const pager = paginate(farms.length, page);
+            const pageOfItems = farms.slice(pager.startIndex, pager.endIndex + 1);
+
+            // return pager object and current page of items
+            return res.json({ pager, pageOfItems });
+
         }
         catch (err) {
             res.status(400).send(err)
