@@ -65,7 +65,7 @@ let routes = (app) => {
                     }
                     req.body.images = reqFiles;
                     try {
-                        const { images, userId, budget } = req.body;
+                        const { images, userId, budget, roi } = req.body;
                         if (!userId)
                             return res.status(500).json({ msg: "Please Login In" })
                         if (!images)
@@ -84,7 +84,6 @@ let routes = (app) => {
         });
     });
 
-
     // get all active investments
     app.get('/investments', async (req, res) => {
         try {
@@ -98,6 +97,21 @@ let routes = (app) => {
         }
     });
 
+    app.get('/investment-4', async (req, res) => {
+        let arr = [];
+        try {
+            let investLatest = await Investment.find().sort({ createdAt: -1 }).limit(1)
+            let investHighestBudget = await Investment.find().sort({ budget: -1 }).limit(1)
+            let investLowestBudget = await Investment.find().sort({ budget: 1 }).limit(1)
+            let investROI = await Investment.find().sort({ roi: -1 }).limit(1)
+                .populate("category", "title")
+            arr.push(investLatest[0], investHighestBudget[0], investLowestBudget[0], investROI[0])
+            res.json(arr)
+        }
+        catch (err) {
+            res.status(500).send(err)
+        }
+    });
 
     app.get('/investment/:id', async (req, res) => {
         try {
@@ -111,9 +125,21 @@ let routes = (app) => {
         }
     });
 
+    app.post('/investment/:id', async (req, res) => {
+        try {
+            let investment = await Investment.findOne({ _id: req.params.id })
+            investment.subscribers.push(req.body)
+            await investment.save()
+            return res.json(investment)
+        }
+        catch (err) {
+            res.status(500).send(err)
+        }
+    });
+
     app.delete('/investment/:id', async (req, res) => {
         try {
-            await Investment.deleteOne()
+            await Investment.deleteOne({ _id: req.params.id })
             res.json({ msg: "Investment Deleted" })
         }
         catch (err) {

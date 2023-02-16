@@ -9,6 +9,7 @@ const InvestmentSchema = new mongoose.Schema({
     phone: { type: String, minlength: 10, maxlength: 11 },
     rating: { type: Number, min: 1, max: 5 },
     budget: { type: String },
+    roi: { type: String },
     terms: { type: String },
     owner: {
         userId: {
