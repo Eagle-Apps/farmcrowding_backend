@@ -7,5 +7,6 @@ require('./endpoints/Farms')(app);
 require('./endpoints/Investment')(app);
 require('./endpoints/Supply')(app);
 require('./endpoints/Forum')(app);
+require('./endpoints/Payment')(app);
 
 module.exports = app;

@@ -15,8 +15,8 @@ const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 4400;
-// const CONNECTION_STRING = "mongodb://localhost:27017/Ndembele";
-const CONNECTION_STRING = "mongodb+srv://meedoMontana:MontanaMongo01@myafricequipdb.rsxoiac.mongodb.net/Ndembele";
+const CONNECTION_STRING = "mongodb://localhost:27017/Ndembele";
+// const CONNECTION_STRING = "mongodb+srv://meedoMontana:MontanaMongo01@myafricequipdb.rsxoiac.mongodb.net/Ndembele";
 // const __filename = fileURLToPath(import.meta.url)
 // const __dirname = path.dirname(__filename);
 

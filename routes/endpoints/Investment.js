@@ -12,6 +12,7 @@ const storage = multer.diskStorage({
 });
 
 const fs = require('fs');
+const { error } = require('console');
 
 const upload = multer({ storage: storage }).array('images', 4);
 
@@ -66,8 +67,6 @@ let routes = (app) => {
                     req.body.images = reqFiles;
                     try {
                         const { images, budget, roi } = req.body;
-                        // if (!userId)
-                        //     return res.status(500).json({ msg: "Please Login In" })
                         if (!images)
                             return res.status(500).json({ msg: "Please Upload Investment Image" })
                         let newInvestment = new Investment(req.body);
@@ -77,7 +76,7 @@ let routes = (app) => {
 
                     }
                     catch (err) {
-                        return res.status(500).send({ msg: "Missing fields" });
+                        return res.status(500).send({ msg: error });
                     }
                 }
             }

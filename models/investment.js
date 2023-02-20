@@ -11,12 +11,12 @@ const InvestmentSchema = new mongoose.Schema({
     budget: { type: String },
     roi: { type: String },
     terms: { type: String },
-    owner: {
-        userId: {
-            type: mongoose.Types.ObjectId,
-            ref: "users"
-        },
-        commitment: { type: String }
+    ownerId: {
+        type: mongoose.Types.ObjectId,
+        ref: "users"
+    },
+    ownerCommitment: {
+        type: String
     },
     category: [{
         type: mongoose.Types.ObjectId,
