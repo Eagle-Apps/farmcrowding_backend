@@ -1,6 +1,7 @@
 const Investment = require('../../models/investment');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
+const paginate = require('jw-paginate');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -76,7 +77,7 @@ let routes = (app) => {
 
                     }
                     catch (err) {
-                        return res.status(500).send({ msg: error });
+                        return res.status(500).send(err);
                     }
                 }
             }
