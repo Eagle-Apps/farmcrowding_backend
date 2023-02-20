@@ -87,9 +87,14 @@ let routes = (app) => {
     // get all active investments
     app.get('/investments/active', async (req, res) => {
         try {
-            let Investments = await Investment.find({ status: "active" }).sort({ createdAt: -1 })
+            let investments = await Investment.find({ status: "active" }).sort({ createdAt: -1 })
                 .populate("category_id", "title")
-            res.json(Investments)
+            const page = parseInt(req.query.page) || 1;
+            const pager = paginate(investments.length, page);
+            const pageOfItems = investments.slice(pager.startIndex, pager.endIndex + 1);
+
+            // return pager object and current page of items
+            return res.json({ pager, pageOfItems });
         }
         catch (err) {
             res.status(400).send(err)
@@ -99,9 +104,14 @@ let routes = (app) => {
     // get all investments
     app.get('/investments', async (req, res) => {
         try {
-            let Investments = await Investment.find()
+            let investments = await Investment.find()
                 .populate("category", "title")
-            res.json(Investments)
+            const page = parseInt(req.query.page) || 1;
+            const pager = paginate(investments.length, page);
+            const pageOfItems = investments.slice(pager.startIndex, pager.endIndex + 1);
+
+            // return pager object and current page of items
+            return res.json({ pager, pageOfItems });
         }
         catch (err) {
             res.status(400).send(err)
