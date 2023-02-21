@@ -1,0 +1,87 @@
+API
+REGISTER
+	POST	/register
+		Body
+			{
+				firstname : string
+				lastname : string
+				password: string
+email: string
+userName: string
+address: string
+phone: string min 10 characters and max 11 character
+
+}
+
+LOGIN
+	POST	/login
+		Body
+			{
+				password: string
+email: string
+}
+LOGOUT
+	POST	/logout/:id
+
+DELETE FARM
+	DELETE	/farm/:id
+
+CREATE FARM
+	POST	/farm
+		Body
+			{
+				name : string
+address: string
+images: images min of 1, max of 4
+phone: string min 10 characters and max 11 character
+userId: id of user creating farm
+category: id of category farm belongs to
+}
+GET ALL FARMS
+	GET	/farms	
+
+GET SINGLE FARM
+	GET	/farms/:id
+
+GET FARMS BY STATUS
+	GET	/farm?status=””
+			status can be active || inactive || suspended
+
+GET FARMS BY CATEGORY
+	GET	/farms-by-category?category=””
+			status can be any categoryId
+
+GET ALL CATEGORIES
+	GET	/category
+
+CREATE INVESTMENT
+	POST /investment
+		BODY{
+				title: string
+images: string
+descp: string for investment description
+phone: string
+budget:  string but send a number type input 
+terms: string
+roi::  string
+ownerId: id of user creating investment
+ownerCommitment:the offer from the owner
+category: categoryId for the type of investment
+
+}
+
+GET ALL INVESTMENTS
+	GET  /investments
+		
+
+GET INVESTMENTS FOR HOME PAGE
+	GET  /investment-4
+
+SUBSCRIBE TO AN INVESTMENT
+	POST  /investment:id
+		{
+subId: id of the user who wants to invest
+role: role of the user; can be a logistics partner, cash investor, farmer etc
+commitment: string to show offer
+
+}
