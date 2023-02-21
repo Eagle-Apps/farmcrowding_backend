@@ -1,25 +1,28 @@
 API
-REGISTER
+
+BASEURL-------> https://ndembele.onrender.com
+
+REGISTER A USER
 	POST	/register
 		Body
 			{
 				firstname : string
 				lastname : string
 				password: string
-email: string
-userName: string
-address: string
-phone: string min 10 characters and max 11 character
-
-}
+                email: string
+                userName: string
+                address: string
+                phone: string min 10 characters and max 11 character
+            }
 
 LOGIN
 	POST	/login
 		Body
 			{
 				password: string
-email: string
-}
+                email: string
+            }
+
 LOGOUT
 	POST	/logout/:id
 
@@ -31,12 +34,13 @@ CREATE FARM
 		Body
 			{
 				name : string
-address: string
-images: images min of 1, max of 4
-phone: string min 10 characters and max 11 character
-userId: id of user creating farm
-category: id of category farm belongs to
-}
+                address: string
+                images: images min of 1, max of 4
+                phone: string min 10 characters and max 11 character
+                userId: id of user creating farm
+                category: id of category farm belongs to
+            }
+
 GET ALL FARMS
 	GET	/farms	
 
@@ -51,6 +55,9 @@ GET FARMS BY CATEGORY
 	GET	/farms-by-category?category=””
 			status can be any categoryId
 
+CREATE CATEGORY
+	POST	/category
+
 GET ALL CATEGORIES
 	GET	/category
 
@@ -58,17 +65,16 @@ CREATE INVESTMENT
 	POST /investment
 		BODY{
 				title: string
-images: string
-descp: string for investment description
-phone: string
-budget:  string but send a number type input 
-terms: string
-roi::  string
-ownerId: id of user creating investment
-ownerCommitment:the offer from the owner
-category: categoryId for the type of investment
-
-}
+                images: string
+                descp: string for investment description
+                phone: string
+                budget:  string but send a number type input 
+                terms: string
+                roi::  string
+                ownerId: id of user creating investment
+                ownerCommitment:the offer from the owner
+                category: categoryId for the type of investment
+            }
 
 GET ALL INVESTMENTS
 	GET  /investments
@@ -80,8 +86,7 @@ GET INVESTMENTS FOR HOME PAGE
 SUBSCRIBE TO AN INVESTMENT
 	POST  /investment:id
 		{
-subId: id of the user who wants to invest
-role: role of the user; can be a logistics partner, cash investor, farmer etc
-commitment: string to show offer
-
-}
+            subId: id of the user who wants to invest
+            role: role of the user; can be a logistics partner, cash investor, farmer etc
+            commitment: string to show offer
+        }
