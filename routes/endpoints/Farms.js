@@ -107,8 +107,6 @@ let routes = (app) => {
             const page = parseInt(req.query.page) || 1;
             const pager = paginate(farms.length, page);
             const pageOfItems = farms.slice(pager.startIndex, pager.endIndex + 1);
-
-            // return pager object and current page of items
             return res.json({ pager, pageOfItems });
 
         }
