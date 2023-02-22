@@ -133,11 +133,11 @@ let routes = (app) => {
             res.status(500).send(err)
         }
     });
-    
-      // to verify investment
+
+    // to verify investment
     app.put('/verify-investment/:id', async (req, res) => {
         try {
-            await User.updateOne({ _id: req.params.id }, { status: "active", verified: true }, { returnOriginal: false });
+            await Investment.updateOne({ _id: req.params.id }, { status: "active", verified: true }, { returnOriginal: false });
             return res.json({ msg: "Investment Verified" })
         }
         catch (err) {
@@ -148,7 +148,7 @@ let routes = (app) => {
     app.get('/investment/:id', async (req, res) => {
         try {
             let investment = await Investment.findOne({ _id: req.params.id })
-                 .populate("category", "title")
+                .populate("category", "title")
             res.json(investment)
         }
         catch (err) {
