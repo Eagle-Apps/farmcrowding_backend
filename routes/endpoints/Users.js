@@ -1,6 +1,7 @@
 const User = require("../../models/user");
 const multer = require('multer');
 const bcrypt = require('bcrypt');
+const paginate = require('jw-paginate');
 const jwt = require("jsonwebtoken");
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -96,11 +97,24 @@ let routes = (app) => {
         }
 
     });
-
+    // not paged
     app.get("/users", async (req, res) => {
         try {
             let users = await User.find({ role: "user" }).sort({ name: 1 })
             res.json(users)
+        }
+        catch (err) {
+            res.status(500).send(err)
+        }
+    });
+    // paged
+    app.get("/userss", async (req, res) => {
+        try {
+            let users = await User.find({ role: "user" }).sort({ name: 1 })
+            const page = parseInt(req.query.page) || 1;
+            const pager = paginate(users.length, page);
+            const pageOfItems = users.slice(pager.startIndex, pager.endIndex + 1);
+            return res.json({ pager, pageOfItems });
         }
         catch (err) {
             res.status(500).send(err)
