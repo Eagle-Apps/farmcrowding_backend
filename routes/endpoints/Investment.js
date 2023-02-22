@@ -133,6 +133,17 @@ let routes = (app) => {
             res.status(500).send(err)
         }
     });
+    
+      // to verify investment
+    app.put('/verify-investment/:id', async (req, res) => {
+        try {
+            await User.updateOne({ _id: req.params.id }, { status: "active", verified: true }, { returnOriginal: false });
+            return res.json({ msg: "User Suspended" })
+        }
+        catch (err) {
+            res.status(500).send({ msg: "Error Occurred" })
+        }
+    });
 
     app.get('/investment/:id', async (req, res) => {
         try {
