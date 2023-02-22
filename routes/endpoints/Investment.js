@@ -147,9 +147,9 @@ let routes = (app) => {
 
     app.get('/investment/:id', async (req, res) => {
         try {
-            let Investment = await Investment.findOne({ _id: req.params.id })
+            let investment = await Investment.findOne({ _id: req.params.id })
                  .populate("category", "title")
-            res.json(Investment)
+            res.json(investment)
         }
         catch (err) {
             res.status(500).send(err)
