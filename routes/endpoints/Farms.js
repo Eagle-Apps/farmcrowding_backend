@@ -118,7 +118,7 @@ let routes = (app) => {
     });
 
     // get all farms not paged
-    app.get('/farms', async (req, res) => {
+    app.get('/farmss', async (req, res) => {
         try {
             let farms = await Farm.find()
                 .populate("userId", "name")
