@@ -101,7 +101,7 @@ let routes = (app) => {
         }
     });
 
-    // get all investments
+    // get all investments paged
     app.get('/investments', async (req, res) => {
         try {
             let investments = await Investment.find()
@@ -112,6 +112,18 @@ let routes = (app) => {
 
             // return pager object and current page of items
             return res.json({ pager, pageOfItems });
+        }
+        catch (err) {
+            res.status(400).send(err)
+        }
+    });
+
+    // get all investments not paged
+    app.get('/investmentss', async (req, res) => {
+        try {
+            let investments = await Investment.find()
+                .populate("category", "title")
+            return res.json(investments);
         }
         catch (err) {
             res.status(400).send(err)
