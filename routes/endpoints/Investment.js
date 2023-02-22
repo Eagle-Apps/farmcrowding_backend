@@ -88,7 +88,7 @@ let routes = (app) => {
     app.get('/investments/active', async (req, res) => {
         try {
             let investments = await Investment.find({ status: "active" }).sort({ createdAt: -1 })
-                .populate("category_id", "title")
+                .populate("category", "title")
             const page = parseInt(req.query.page) || 1;
             const pager = paginate(investments.length, page);
             const pageOfItems = investments.slice(pager.startIndex, pager.endIndex + 1);
@@ -138,7 +138,7 @@ let routes = (app) => {
     app.put('/verify-investment/:id', async (req, res) => {
         try {
             await User.updateOne({ _id: req.params.id }, { status: "active", verified: true }, { returnOriginal: false });
-            return res.json({ msg: "User Suspended" })
+            return res.json({ msg: "Investment Verified" })
         }
         catch (err) {
             res.status(500).send({ msg: "Error Occurred" })
@@ -148,8 +148,7 @@ let routes = (app) => {
     app.get('/investment/:id', async (req, res) => {
         try {
             let Investment = await Investment.findOne({ _id: req.params.id })
-                .populate("user_id", "firstname lastname")
-                .populate("category_id", "title")
+                 .populate("category", "title")
             res.json(Investment)
         }
         catch (err) {
