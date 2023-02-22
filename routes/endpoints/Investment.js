@@ -145,6 +145,17 @@ let routes = (app) => {
         }
     });
 
+    // to suspend investment
+    app.put('/suspend-investment/:id', async (req, res) => {
+        try {
+            await Investment.updateOne({ _id: req.params.id }, { status: "inactive", verified: false }, { returnOriginal: false });
+            return res.json({ msg: "Investment Suspended" })
+        }
+        catch (err) {
+            res.status(500).send({ msg: "Error Occurred" })
+        }
+    });
+
     app.get('/investment/:id', async (req, res) => {
         try {
             let investment = await Investment.findOne({ _id: req.params.id })
