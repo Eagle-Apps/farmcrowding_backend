@@ -98,7 +98,7 @@ let routes = (app) => {
         }
     });
 
-    // get all farms
+    // get all farms paged
     app.get('/farms', async (req, res) => {
         try {
             let farms = await Farm.find().sort({ name: 1 })
@@ -114,6 +114,42 @@ let routes = (app) => {
         }
         catch (err) {
             res.status(400).send(err)
+        }
+    });
+
+    // get all farms not paged
+    app.get('/farms', async (req, res) => {
+        try {
+            let farms = await Farm.find()
+                .populate("userId", "name")
+                .populate("category", "title")
+            return res.json(farms);
+
+        }
+        catch (err) {
+            res.status(400).send(err)
+        }
+    });
+
+    // to verify farm
+    app.put('/verify-farm/:id', async (req, res) => {
+        try {
+            await Farm.updateOne({ _id: req.params.id }, { status: "active", verified: true }, { returnOriginal: false });
+            return res.json({ msg: "Farm Verified" })
+        }
+        catch (err) {
+            res.status(500).send({ msg: "Error Occurred" })
+        }
+    });
+
+    // to suspend farm
+    app.put('/suspend-farm/:id', async (req, res) => {
+        try {
+            await Farm.updateOne({ _id: req.params.id }, { status: "inactive", verified: false }, { returnOriginal: false });
+            return res.json({ msg: "Farm Suspended" })
+        }
+        catch (err) {
+            res.status(500).send({ msg: "Error Occurred" })
         }
     });
 
