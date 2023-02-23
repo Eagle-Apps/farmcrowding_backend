@@ -115,6 +115,23 @@ let routes = (app) => {
         }
     });
 
+    // get all based of verification  farms paged
+    app.get('/verify/farms', async (req, res) => {
+        try {
+            let farms = await Farm.find({ verified: req.query.verified }).sort({ name: 1 })
+                .populate("userId", "name")
+                .populate("category", "title")
+            const page = parseInt(req.query.page) || 1;
+            const pager = paginate(farms.length, page);
+            const pageOfItems = farms.slice(pager.startIndex, pager.endIndex + 1);
+            return res.json({ pager, pageOfItems });
+
+        }
+        catch (err) {
+            res.status(400).send(err)
+        }
+    });
+
     // get all farms not paged
     app.get('/farmss', async (req, res) => {
         try {
