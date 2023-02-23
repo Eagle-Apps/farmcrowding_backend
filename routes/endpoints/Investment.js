@@ -119,6 +119,23 @@ let routes = (app) => {
         }
     });
 
+    // get investments by verification status paged
+    app.get('/verify/investments', async (req, res) => {
+        try {
+            let investments = await Investment.find({ verified: req.query.verified })
+                .populate("category", "title")
+                .populate("ownerId", "name")
+            const page = parseInt(req.query.page) || 1;
+            const pager = paginate(investments.length, page);
+            const pageOfItems = investments.slice(pager.startIndex, pager.endIndex + 1);
+            return res.json({ pager, pageOfItems });
+        }
+        catch (err) {
+            res.status(400).send(err)
+        }
+    });
+
+
     // get all investments not paged
     app.get('/investmentss', async (req, res) => {
         try {
