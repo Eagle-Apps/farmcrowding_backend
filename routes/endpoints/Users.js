@@ -180,7 +180,7 @@ let routes = (app) => {
 
     app.get("/user", auth, async (req, res) => {
         try {
-            let user = await User.findOne({ _id: req.params.id });
+            let user = await User.findOne({ _id: req.user.id });
             res.json(user)
         }
         catch (err) {
