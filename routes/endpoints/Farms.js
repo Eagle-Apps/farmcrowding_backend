@@ -1,7 +1,9 @@
+require('dotenv').config();
 const Farm = require('../../models/farms');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const paginate = require('jw-paginate');
+const { auth, isAdmin } = require("../../middlewares/authorize");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -16,13 +18,11 @@ const fs = require('fs');
 
 const upload = multer({ storage: storage }).array('images', 4);
 
-// const { auth, isLoggedIn } = require('../middlewares/loggedIn');
-
 // cloudinary configuration
 cloudinary.config({
-    cloud_name: "dfv4cufzp",
-    api_key: 861174487596545,
-    api_secret: "6n_1lICquMhRN4YgAMzQlhuG6tY"
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET
 });
 
 async function uploadToCloudinary(locaFilePath) {
@@ -51,7 +51,7 @@ async function uploadToCloudinary(locaFilePath) {
 };
 
 let routes = (app) => {
-    app.post('/farm', async (req, res) => {
+    app.post('/farm', auth, async (req, res) => {
         upload(req, res, async (err) => {
             if (err) {
                 console.log(err)
@@ -147,7 +147,7 @@ let routes = (app) => {
     });
 
     // to verify farm
-    app.put('/verify-farm/:id', async (req, res) => {
+    app.put('/verify-farm/:id', isAdmin, async (req, res) => {
         try {
             await Farm.updateOne({ _id: req.params.id }, { status: "active", verified: true }, { returnOriginal: false });
             return res.json({ msg: "Farm Verified" })
@@ -158,7 +158,7 @@ let routes = (app) => {
     });
 
     // to suspend farm
-    app.put('/suspend-farm/:id', async (req, res) => {
+    app.put('/suspend-farm/:id', isAdmin, async (req, res) => {
         try {
             await Farm.updateOne({ _id: req.params.id }, { status: "inactive", verified: false }, { returnOriginal: false });
             return res.json({ msg: "Farm Suspended" })
@@ -206,7 +206,7 @@ let routes = (app) => {
         }
     });
 
-    app.delete('/farm/:id', async (req, res) => {
+    app.delete('/farm/:id', auth, async (req, res) => {
         try {
             await Farm.deleteOne({ _id: req.params.id })
             res.json({ msg: "Farm Deleted" })
