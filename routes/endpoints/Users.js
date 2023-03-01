@@ -168,7 +168,17 @@ let routes = (app) => {
         }
     });
 
-    app.get("/user/:id", auth, async (req, res) => {
+    app.get("/user/:id", isAdmin, async (req, res) => {
+        try {
+            let user = await User.findOne({ _id: req.params.id });
+            res.json(user)
+        }
+        catch (err) {
+            res.status(500).send(err)
+        }
+    });
+
+    app.get("/user", auth, async (req, res) => {
         try {
             let user = await User.findOne({ _id: req.params.id });
             res.json(user)
