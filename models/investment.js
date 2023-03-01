@@ -10,6 +10,7 @@ const InvestmentSchema = new mongoose.Schema({
     rating: { type: Number, min: 1, max: 5 },
     cycle: { type: String },
     progress: { type: String },
+    createdBy: { type: String, enum: ["farmer", "land owner", "money investor", "farmer and land owner"] },
     timeLeft: { type: Date },
     budget: { type: String },
     roi: { type: String },
