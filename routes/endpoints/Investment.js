@@ -105,10 +105,8 @@ let routes = (app) => {
                 .populate("category", "title")
                 .populate("ownerId", "name")
             const page = parseInt(req.query.page) || 1;
-            const pager = paginate(investments.length, page);
+            const pager = paginate(investments.length, page, 12);
             const pageOfItems = investments.slice(pager.startIndex, pager.endIndex + 1);
-
-            // return pager object and current page of items
             return res.json({ pager, pageOfItems });
         }
         catch (err) {
