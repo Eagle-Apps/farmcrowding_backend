@@ -2,6 +2,7 @@ const Investment = require('../../models/investment');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const paginate = require('jw-paginate');
+const { auth, isAdmin } = require("../../middlewares/authorize");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -13,17 +14,13 @@ const storage = multer.diskStorage({
 });
 
 const fs = require('fs');
-const { error } = require('console');
-
 const upload = multer({ storage: storage }).array('images', 4);
-
-// const { auth, isLoggedIn } = require('../middlewares/loggedIn');
 
 // cloudinary configuration
 cloudinary.config({
-    cloud_name: "dfv4cufzp",
-    api_key: 861174487596545,
-    api_secret: "6n_1lICquMhRN4YgAMzQlhuG6tY"
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET
 });
 
 async function uploadToCloudinary(locaFilePath) {
@@ -52,7 +49,7 @@ async function uploadToCloudinary(locaFilePath) {
 };
 
 let routes = (app) => {
-    app.post('/investment', async (req, res) => {
+    app.post('/investment', auth, async (req, res) => {
         upload(req, res, async (err) => {
             if (err) {
                 console.log(err)
@@ -165,7 +162,7 @@ let routes = (app) => {
     });
 
     // to verify investment
-    app.put('/verify-investment/:id', async (req, res) => {
+    app.put('/verify-investment/:id', isAdmin, async (req, res) => {
         try {
             await Investment.updateOne({ _id: req.params.id }, { status: "active", verified: true }, { returnOriginal: false });
             return res.json({ msg: "Investment Verified" })
@@ -176,7 +173,7 @@ let routes = (app) => {
     });
 
     // to suspend investment
-    app.put('/suspend-investment/:id', async (req, res) => {
+    app.put('/suspend-investment/:id', isAdmin, async (req, res) => {
         try {
             await Investment.updateOne({ _id: req.params.id }, { status: "inactive", verified: false }, { returnOriginal: false });
             return res.json({ msg: "Investment Suspended" })
@@ -197,19 +194,7 @@ let routes = (app) => {
         }
     });
 
-    app.post('/investment/:id', async (req, res) => {
-        try {
-            let investment = await Investment.findOne({ _id: req.params.id })
-            investment.subscribers.push(req.body)
-            await investment.save()
-            return res.json(investment)
-        }
-        catch (err) {
-            res.status(500).send(err)
-        }
-    });
-
-    app.delete('/investment/:id', async (req, res) => {
+    app.delete('/investment/:id', auth, async (req, res) => {
         try {
             await Investment.deleteOne({ _id: req.params.id })
             res.json({ msg: "Investment Deleted" })
