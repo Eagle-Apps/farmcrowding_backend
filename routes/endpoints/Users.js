@@ -1,8 +1,10 @@
+require('dotenv').config();
 const User = require("../../models/user");
 const multer = require('multer');
 const bcrypt = require('bcrypt');
 const paginate = require('jw-paginate');
 const jwt = require("jsonwebtoken");
+const { auth, isAdmin } = require("../../middlewares/authorize")
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads/')
@@ -98,7 +100,7 @@ let routes = (app) => {
 
     });
     // not paged
-    app.get("/users", async (req, res) => {
+    app.get("/users", isAdmin, async (req, res) => {
         try {
             let users = await User.find({ role: "user" }).sort({ name: 1 })
             res.json(users)
@@ -108,7 +110,7 @@ let routes = (app) => {
         }
     });
     // paged
-    app.get("/userss", async (req, res) => {
+    app.get("/userss", isAdmin, async (req, res) => {
         try {
             let users = await User.find({ role: "user" }).sort({ name: 1 })
             const page = parseInt(req.query.page) || 1;
@@ -145,7 +147,7 @@ let routes = (app) => {
     });
 
     // to suspend user
-    app.put('/suspend-user/:id', async (req, res) => {
+    app.put('/suspend-user/:id', isAdmin, async (req, res) => {
         try {
             await User.updateOne({ _id: req.params.id }, { status: "suspended" }, { returnOriginal: false });
             return res.json({ msg: "User Suspended" })
@@ -156,7 +158,7 @@ let routes = (app) => {
     });
 
     // to remove user from suspension
-    app.put('/revoke-user/:id', async (req, res) => {
+    app.put('/revoke-user/:id', isAdmin, async (req, res) => {
         try {
             await User.updateOne({ _id: req.params.id }, { status: "inactive" }, { returnOriginal: false });
             return res.json({ msg: "Suspension Revoked" })
@@ -166,7 +168,7 @@ let routes = (app) => {
         }
     });
 
-    app.get("/user/:id", async (req, res) => {
+    app.get("/user/:id", auth, async (req, res) => {
         try {
             let user = await User.findOne({ _id: req.params.id });
             res.json(user)
@@ -217,19 +219,20 @@ let routes = (app) => {
             const isMatch = await bcrypt.compare(password, user.password)
             if (!isMatch) return res.status(400).json({ msg: "Password is incorrect." })
             await User.updateOne({ email }, { status: "active" }, { returnOriginal: false })
-            // const token = createAccessToken({ id: user._id })
 
-            // const refresh_token = createRefreshToken({ id: user._id })
-            // res.cookie('refreshtoken', refresh_token, {
-            //     httpOnly: true,
-            //     path: '/user/refresh_token',
-            //     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-            // })
+            const token = createAccessToken({ id: user._id })
+            const refreshToken = createRefreshToken({ id: user._id })
+            res.cookie('ndembelejwt', refreshToken, {
+                httpOnly: true,
+                // sameSite: 'None', 
+                secure: true,
+                path: '/refresh',
+                maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
+            });
 
-            res.json({
-                msg: "Login successful!",
-                userID: user._id
-                // access_token: token
+            return res.json({
+                msg: "Login successful !!!",
+                access_token: token
             })
         }
         catch (err) {
@@ -237,11 +240,30 @@ let routes = (app) => {
         }
     });
 
+    app.post('/refresh', (req, res) => {
+        if (req.cookies?.ndembelejwt) {
+            const refreshToken = req.cookies.ndembelejwt;
+
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET,
+                (err, user) => {
+                    if (err) {
+                        return res.status(406).json({ message: 'Unauthorized' });
+                    }
+                    else {
+                        const accessToken = createAccessToken({ id: user.id })
+                        return res.json({ accessToken });
+                    }
+                })
+        } else {
+            return res.status(406).json({ message: 'Unauthorized' });
+        }
+    });
+
     app.post("/logout/:id", async (req, res) => {
         try {
             // const { email, password, status } = req.body;
             await User.updateOne({ _id: req.params.id }, { status: "inactive" }, { returnOriginal: false })
-            // res.clearCookie('refreshtoken', { path: '/user/refresh_token' })
+            res.clearCookie('ndembelejwt', { path: '/refresh' })
             return res.json({ msg: "Logged out." })
         }
         catch (err) {
@@ -255,12 +277,12 @@ function validateEmail(email) {
     return re.test(email);
 };
 
-// function createAccessToken(payload) {
-//     return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' })
-// };
+function createAccessToken(payload) {
+    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' })
+};
 
-// function createRefreshToken(payload) {
-//     return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '10m' })
-// };
+function createRefreshToken(payload) {
+    return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '10m' })
+};
 
 module.exports = routes;
