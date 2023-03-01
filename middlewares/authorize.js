@@ -28,7 +28,7 @@ const isAdmin = (req, res, next) => {
     }
 };
 
-const authorize = (req, res, next) => {
+const auth = (req, res, next) => {
     const authHeader = req.headers.authorization
     if (!authHeader || !authHeader.startsWith("Bearer")) {
         return res.status(404).json({ success: false, msg: "Unauthorized User" })
@@ -57,4 +57,4 @@ const authorize = (req, res, next) => {
 //     }
 // }
 
-module.exports = { authorize, isAdmin } 
+module.exports = { auth, isAdmin } 
