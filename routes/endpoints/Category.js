@@ -26,7 +26,7 @@ let routes = (app) => {
 
     app.delete('/category/:id', async (req, res) => {
         try {
-            await Category.deleteOne()
+            await Category.deleteOne({ _id: req.params.id })
             res.json({ msg: "Category Deleted" })
         }
         catch (err) {

@@ -8,6 +8,8 @@ const InvestmentSchema = new mongoose.Schema({
     verified: { type: Boolean, default: false },
     phone: { type: String, minlength: 10, maxlength: 11 },
     rating: { type: Number, min: 1, max: 5 },
+    cycle: { type: Number },
+    timeLeft: { type: Date },
     budget: { type: String },
     roi: { type: String },
     terms: { type: String },
@@ -22,16 +24,16 @@ const InvestmentSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "categories"
     }],
-    subscribers: [{
-        subId: {
-            type: mongoose.Types.ObjectId,
-            ref: "users"
-        },
-        role: { type: String },
-        commitment: { type: String },
-        status: { type: String, enum: ["pending", "participant"], default: "pending" }
-    }]
-    ,
+    // subscribers: [{
+    //     subId: {
+    //         type: mongoose.Types.ObjectId,
+    //         ref: "users"
+    //     },
+    //     role: { type: String },
+    //     commitment: { type: String },
+    //     status: { type: String, enum: ["pending", "participant"], default: "pending" }
+    // }]
+    // ,
 }, {
     toJSON: {
         transform(doc, ret) {
