@@ -16,10 +16,10 @@ let routes = (app) => {
     // get subscribers of a project
     app.get('/subscribe/:id', async (req, res) => {
         try {
-            let subscribe = await Subscribe.find({ _id: req.params.id })
+            let subscribe = await Subscribe.find({ investmentId: req.params.id })
                 .populate("userId", "name role")
-                .populate("investmentId", "name role")
-            res.json(subscribe)
+                // .populate("investmentId", "name role")
+            res.json(subscribe.userId)
         }
         catch (err) {
             res.status(500).send(err)
