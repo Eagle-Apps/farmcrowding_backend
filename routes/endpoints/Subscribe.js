@@ -13,9 +13,10 @@ let routes = (app) => {
         }
     });
 
-    app.get('/subscribe', async (req, res) => {
+    // get subscribers of a project
+    app.get('/subscribe/:id', async (req, res) => {
         try {
-            let subscribe = await Subscribe.find()
+            let subscribe = await Subscribe.find({ _id: req.params.id })
                 .populate("userId", "name role")
                 .populate("investmentId", "name role")
             res.json(subscribe)
