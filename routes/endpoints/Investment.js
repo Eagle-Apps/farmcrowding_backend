@@ -99,6 +99,18 @@ let routes = (app) => {
         }
     });
 
+    // get investments created by a User
+    app.get('/investments-user', auth, async (req, res) => {
+        try {
+            let investments = await Investment.find({ ownerId: req.user.id }).sort({ createdAt: -1 })
+                .populate("category", "title")
+            return res.json(investments);
+        }
+        catch (err) {
+            res.status(400).send(err)
+        }
+    });
+
     // get all investments paged
     app.get('/investments', async (req, res) => {
         try {
