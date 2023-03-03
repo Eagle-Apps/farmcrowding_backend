@@ -40,8 +40,8 @@ let routes = (app) => {
     app.get('/forums/:id', async (req, res) => {
         try {
             let forum = await Forum.find({ investment_id: req.params.id })
-                .populate("investment_id")
-                .populate("userId")
+                // .populate("investment_id")
+                .populate("userId", "userName")
             res.json(forum)
         }
         catch (err) {
