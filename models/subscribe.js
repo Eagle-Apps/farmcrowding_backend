@@ -6,7 +6,7 @@ const SubscribeSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "users"
     },
-    role: { type: String, enum: ["farmer", "land owner", "money investor", "farmer and land owner"] },
+    role: { type: String, default: "money investor", enum: ["farmer", "land owner", "money investor", "farmer and land owner"] },
     commitment: { type: String },
     status: { type: String, enum: ["pending", "participant", "declined"], default: "pending" }
 },
