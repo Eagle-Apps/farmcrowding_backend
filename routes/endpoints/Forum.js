@@ -17,7 +17,7 @@ let routes = (app) => {
         try {
             let forum = await Forum.find()
                 .populate("investment_id")
-                .populate("user_id")
+                .populate("userId")
             res.json(forum)
         }
         catch (err) {
@@ -29,7 +29,7 @@ let routes = (app) => {
         try {
             let forum = await Forum.findOne({ _id: req.params.id })
                 .populate("investment_id")
-                .populate("user_id")
+                .populate("userId")
             res.json(forum)
         }
         catch (err) {
@@ -41,7 +41,7 @@ let routes = (app) => {
         try {
             let forum = await Forum.find({ investment_id: req.params.id })
                 .populate("investment_id")
-                .populate("user_id")
+                .populate("userId")
             res.json(forum)
         }
         catch (err) {
