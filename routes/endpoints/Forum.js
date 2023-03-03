@@ -25,7 +25,7 @@ let routes = (app) => {
         }
     });
 
-    app.get('/forum:id', async (req, res) => {
+    app.get('/forum/:id', async (req, res) => {
         try {
             let forum = await Forum.findOne({ _id: req.params.id })
                 .populate("investment_id")
@@ -37,7 +37,7 @@ let routes = (app) => {
         }
     });
 
-    app.get('/forums:id', async (req, res) => {
+    app.get('/forums/:id', async (req, res) => {
         try {
             let forum = await Forum.find({ investment_id: req.params.id })
                 .populate("investment_id")
