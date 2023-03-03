@@ -37,6 +37,18 @@ let routes = (app) => {
         }
     });
 
+    app.get('/forums:id', async (req, res) => {
+        try {
+            let forum = await Forum.find({ investment_id: req.params.id })
+                .populate("investment_id")
+                .populate("user_id")
+            res.json(forum)
+        }
+        catch (err) {
+            res.status(500).send(err)
+        }
+    });
+
     app.delete('/forum/:id', async (req, res) => {
         try {
             await Forum.deleteOne({ _id: req.params.id })
