@@ -9,5 +9,6 @@ require('./endpoints/Supply')(app);
 require('./endpoints/Forum')(app);
 require('./endpoints/Payment')(app);
 require('./endpoints/Report')(app);
+require('./endpoints/Subscribe')(app);
 
 module.exports = app;
