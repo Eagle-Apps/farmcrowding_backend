@@ -1,14 +1,20 @@
 const Subscribe = require('../../models/subscribe');
+const Investment = require('../../models/investment');
+const { auth, isAdmin } = require("../../middlewares/authorize");
 
 let routes = (app) => {
 
     app.post('/subscribe', async (req, res) => {
         try {
             let subscribe = new Subscribe(req.body);
+            let investment = await Investment.findOne({ _id: subscribe.investmentId })
+            let available = Number(investment.available.replaceAll(",", "")) - Number(subscribe.commitment.replaceAll(",", ""))
+            await Investment.updateOne({ _id: subscribe.investmentId }, { available: Number(available).toLocaleString() })
             await subscribe.save()
             res.json(subscribe)
         }
         catch (err) {
+            console.log(err)
             res.status(500).send(err)
         }
     });
@@ -18,8 +24,22 @@ let routes = (app) => {
         try {
             let subscribe = await Subscribe.find({ investmentId: req.params.id })
                 .populate("userId", "name role")
-                // .populate("investmentId", "name role")
-            res.json(subscribe.userId)
+                .populate("investmentId", "title")
+            res.json(subscribe)
+        }
+        catch (err) {
+            res.status(500).send(err)
+        }
+    });
+
+
+    // get projects a user is subscribed to
+    app.get('/subscribe-user', auth, async (req, res) => {
+        try {
+            let subscribe = await Subscribe.find({ userId: req.user.id })
+                .populate("userId", "name role")
+                .populate("investmentId", "title")
+            res.json(subscribe)
         }
         catch (err) {
             res.status(500).send(err)
