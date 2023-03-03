@@ -9,10 +9,11 @@ const InvestmentSchema = new mongoose.Schema({
     phone: { type: String, minlength: 10, maxlength: 11 },
     rating: { type: Number, min: 1, max: 5 },
     cycle: { type: String },
-    progress: { type: String },
-    createdBy: { type: String, enum: ["farmer", "land owner", "money investor", "farmer and land owner"] },
-    timeLeft: { type: Date },
+    duration: { type: String },
+    progress: { type: String, default: "0%" },
+    createdBy: { type: String, default: "farmer", enum: ["farmer", "land owner", "money investor", "farmer and land owner"] },
     budget: { type: String },
+    available: { type: String },
     roi: { type: String },
     terms: { type: String },
     ownerId: {
@@ -26,16 +27,6 @@ const InvestmentSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "categories"
     }],
-    // subscribers: [{
-    //     subId: {
-    //         type: mongoose.Types.ObjectId,
-    //         ref: "users"
-    //     },
-    //     role: { type: String },
-    //     commitment: { type: String },
-    //     status: { type: String, enum: ["pending", "participant"], default: "pending" }
-    // }]
-    // ,
 }, {
     toJSON: {
         transform(doc, ret) {
