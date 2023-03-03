@@ -64,11 +64,12 @@ let routes = (app) => {
                     }
                     req.body.images = reqFiles;
                     try {
-                        const { images, budget, roi } = req.body;
+                        const { images, budget } = req.body;
                         if (!images)
                             return res.status(500).json({ msg: "Please Upload Investment Image" })
                         let newInvestment = new Investment(req.body);
                         newInvestment.budget = Number(budget).toLocaleString()
+                        newInvestment.available = Number(budget).toLocaleString()
                         await newInvestment.save()
                         return res.status(200).json({ msg: "Investment Successfully Created" })
 
