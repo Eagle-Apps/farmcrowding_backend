@@ -194,6 +194,19 @@ let routes = (app) => {
         }
     });
 
+    // get farms created by a user
+    app.get('/farms-user', auth, async (req, res) => {
+        try {
+            let farms = await Farm.find({ userId: req.user.id }).sort({ name: 1 })
+                .populate("userId", "name")
+                .populate("category", "title")
+            res.json(farms)
+        }
+        catch (err) {
+            res.status(500).send(err)
+        }
+    });
+
     app.get('/farm/:id', async (req, res) => {
         try {
             let farm = await Farm.findOne({ _id: req.params.id })

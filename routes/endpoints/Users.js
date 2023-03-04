@@ -234,7 +234,7 @@ let routes = (app) => {
             const refreshToken = createRefreshToken({ id: user._id })
             res.cookie('ndembelejwt', refreshToken, {
                 httpOnly: true,
-                // sameSite: 'None', 
+                sameSite: 'None',
                 secure: true,
                 path: '/refresh',
                 maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
@@ -260,8 +260,9 @@ let routes = (app) => {
                         return res.status(406).json({ message: 'Unauthorized' });
                     }
                     else {
+                        console.log("reach")
                         const accessToken = createAccessToken({ id: user.id })
-                        return res.json({ accessToken });
+                        return res.json({ accessToken, msg: "Access token created successfully" });
                     }
                 })
         } else {
@@ -292,7 +293,7 @@ function createAccessToken(payload) {
 };
 
 function createRefreshToken(payload) {
-    return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '10m' })
+    return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '3d' })
 };
 
 module.exports = routes;

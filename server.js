@@ -1,13 +1,3 @@
-// import dotenv from "dotenv";
-// import express from "express";
-// import mongoose from "mongoose";
-// import cors from "cors";
-// import path, { dirname } from "path";
-// import routes from "./routes";
-// import bodyparser from "body-parser";
-// import { fileURLToPath } from 'url';
-// import { cloudinaryConfig } from "./config/cloudinaryConfig";
-
 require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
