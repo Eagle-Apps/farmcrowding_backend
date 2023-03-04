@@ -1,10 +1,15 @@
 const Report = require('../../models/report');
+const Investment = require('../../models/investment');
+const { auth, isAdmin } = require("../../middlewares/authorize")
 
 let routes = (app) => {
 
-    app.post('/report', async (req, res) => {
+    app.post('/report', auth, async (req, res) => {
         try {
+            let { userId } = req.body;
+            userId = req.user.id
             let report = new Report(req.body);
+            await Investment.updateOne({ _id: report.investment_id }, { progress: report.progress })
             await report.save()
             res.json(report)
         }

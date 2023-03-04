@@ -1,6 +1,6 @@
 const Subscribe = require('../../models/subscribe');
 const Investment = require('../../models/investment');
-const { auth, isAdmin } = require("../../middlewares/authorize");
+const { auth } = require("../../middlewares/authorize");
 
 let routes = (app) => {
 

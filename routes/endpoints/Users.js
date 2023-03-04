@@ -242,7 +242,8 @@ let routes = (app) => {
 
             return res.json({
                 msg: "Login successful !!!",
-                access_token: token
+                access_token: token,
+                refreshToken
             })
         }
         catch (err) {
@@ -251,6 +252,7 @@ let routes = (app) => {
     });
 
     app.post('/refresh', (req, res) => {
+        console.log("invoked")
         if (req.cookies?.ndembelejwt) {
             const refreshToken = req.cookies.ndembelejwt;
 
