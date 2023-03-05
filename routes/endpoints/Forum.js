@@ -1,10 +1,13 @@
 const Forum = require('../../models/forum');
+const { auth } = require("../../middlewares/authorize");
 
 let routes = (app) => {
 
-    app.post('/forum', async (req, res) => {
+    app.post('/forum', auth, async (req, res) => {
         try {
+            let { userId } = req.user.id;
             let forum = new Forum(req.body);
+            forum.userId = userId
             await forum.save()
             res.json(forum)
         }
@@ -40,7 +43,6 @@ let routes = (app) => {
     app.get('/forums/:id', async (req, res) => {
         try {
             let forum = await Forum.find({ investment_id: req.params.id })
-                // .populate("investment_id")
                 .populate("userId", "userName")
             res.json(forum)
         }
