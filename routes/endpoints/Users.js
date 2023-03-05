@@ -252,17 +252,15 @@ let routes = (app) => {
     });
 
     app.post('/refresh', (req, res) => {
-        console.log("invoked")
-        if (req.cookies?.ndembelejwt) {
-            const refreshToken = req.cookies.ndembelejwt;
-
+        let { token } = req.body
+        if (token) {
+            const refreshToken = token;
             jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET,
                 (err, user) => {
                     if (err) {
                         return res.status(406).json({ message: 'Unauthorized' });
                     }
                     else {
-                        console.log("reach")
                         const accessToken = createAccessToken({ id: user.id })
                         return res.json({ accessToken, msg: "Access token created successfully" });
                     }
@@ -270,6 +268,23 @@ let routes = (app) => {
         } else {
             return res.status(406).json({ message: 'Unauthorized' });
         }
+        // if (req.cookies?.ndembelejwt) {
+        //     const refreshToken = req.cookies.ndembelejwt;
+
+        //     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET,
+        //         (err, user) => {
+        //             if (err) {
+        //                 return res.status(406).json({ message: 'Unauthorized' });
+        //             }
+        //             else {
+        //                 console.log("reach")
+        //                 const accessToken = createAccessToken({ id: user.id })
+        //                 return res.json({ accessToken, msg: "Access token created successfully" });
+        //             }
+        //         })
+        // } else {
+        //     return res.status(406).json({ message: 'Unauthorized' });
+        // }
     });
 
     app.post("/logout/:id", async (req, res) => {
