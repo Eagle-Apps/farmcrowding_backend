@@ -7,6 +7,7 @@ const PaymentSchema = new mongoose.Schema({
     // expiry_month: { type: String, required: true, trim: true },
     // expiry_year: { type: String, required: true, trim: true },
     currency: { type: String, required: true, default: "NGN" },
+    transactionRef: { type: String },
     // redirect_url: { type: String, },
     // fullname: { type: String, required: true, trim: true },
     // email: { type: String, required: true, trim: true },
