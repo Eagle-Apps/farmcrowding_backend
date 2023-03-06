@@ -5,9 +5,8 @@ let routes = (app) => {
 
     app.post('/forum', auth, async (req, res) => {
         try {
-            let { userId } = req.user.id;
             let forum = new Forum(req.body);
-            forum.userId = userId
+            forum.userId = req.user.id
             await forum.save()
             res.json(forum)
         }
