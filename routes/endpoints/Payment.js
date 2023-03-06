@@ -6,6 +6,7 @@ const flw = new Flutterwave(process.env.FLW_PUBLIC_KEY, process.env.FLW_SECRET_K
 const User = require("../../models/user");
 // const got = require("got");
 const axios = require('axios');
+const { auth } = require("../../middlewares/authorize");
 
 let routes = (app) => {
 
@@ -228,7 +229,7 @@ let routes = (app) => {
             }
         }
 
-        return res.redirect('/payment-failed');
+        // return res.redirect('/payment-failed');
     });
 
     // // Our redirect_url. For 3DS payments, Flutterwave will redirect here after authorization,
@@ -250,6 +251,18 @@ let routes = (app) => {
 
     //     return res.redirect('/payment-failed');
     // });
+
+    app.post('/payment', auth, async (req, res) => {
+        try {
+            let payment = new Payment(req.body);
+            payment.userId = req.user.id
+            await payment.save()
+            res.json(payment)
+        }
+        catch (err) {
+            res.status(500).send(err)
+        }
+    });
 
     app.get('/payment', async (req, res) => {
         try {
