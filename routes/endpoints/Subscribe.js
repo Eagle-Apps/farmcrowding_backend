@@ -4,10 +4,9 @@ const { auth } = require("../../middlewares/authorize");
 
 let routes = (app) => {
 
-    app.post('/subscribe', auth, async (req, res) => {
+    app.post('/subscribe', async (req, res) => {
         try {
             let subscribe = new Subscribe(req.body);
-            subscribe.userId = req.user.id
             let investment = await Investment.findOne({ _id: subscribe.investmentId })
             let available = Number(investment.available.replaceAll(",", "")) - Number(subscribe.commitment.replaceAll(",", ""))
             await Investment.updateOne({ _id: subscribe.investmentId }, { available: Number(available).toLocaleString() })
