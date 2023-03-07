@@ -66,12 +66,11 @@ let routes = (app) => {
                     }
                     req.body.images = reqFiles;
                     try {
-                        const { images, userId } = req.body;
-                        if (!userId)
-                            return res.status(500).json({ msg: "Please Login In" })
+                        const { images } = req.body;
                         if (!images)
                             return res.status(500).json({ msg: "Please Upload Farm Image" })
                         let newFarm = new Farm(req.body);
+                        newFarm.userId = req.user.id
                         await newFarm.save()
                         return res.status(200).json({ msg: "Farm Successfully Created" })
 
