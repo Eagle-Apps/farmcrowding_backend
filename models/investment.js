@@ -22,7 +22,8 @@ const InvestmentSchema = new mongoose.Schema({
         ref: "users"
     },
     ownerCommitment: {
-        type: String
+        type: mongoose.Types.ObjectId,
+        ref: "farms"
     },
     category: [{
         type: mongoose.Types.ObjectId,
