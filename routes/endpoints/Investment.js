@@ -68,6 +68,7 @@ let routes = (app) => {
                         if (!images)
                             return res.status(500).json({ msg: "Please Upload Investment Image" })
                         let newInvestment = new Investment(req.body);
+                        newInvestment.ownerId = req.user.id
                         newInvestment.budget = Number(budget).toLocaleString()
                         newInvestment.available = Number(budget).toLocaleString()
                         await newInvestment.save()
