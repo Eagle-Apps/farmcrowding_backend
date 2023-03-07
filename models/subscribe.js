@@ -8,7 +8,7 @@ const SubscribeSchema = new mongoose.Schema({
     },
     role: { type: String, default: "money investor", enum: ["farmer", "land owner", "money investor", "farmer and land owner"] },
     commitment: { type: String },
-    status: { type: String, default: "participant", enum: ["pending", "participant", "declined"], default: "pending" }
+    status: { type: String, default: "participant", enum: ["pending", "participant", "declined"] }
 },
     {
         toJSON: {
