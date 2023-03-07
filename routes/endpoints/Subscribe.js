@@ -12,10 +12,9 @@ let routes = (app) => {
             let available = Number(investment.available.replaceAll(",", "")) - Number(subscribe.commitment.replaceAll(",", ""))
             await Investment.updateOne({ _id: subscribe.investmentId }, { available: Number(available).toLocaleString() })
             await subscribe.save()
-            res.json(subscribe)
+            res.json({ msg: "Project Successfully Joined" })
         }
         catch (err) {
-            console.log(err)
             res.status(500).send(err)
         }
     });
