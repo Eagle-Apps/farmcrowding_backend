@@ -16,6 +16,7 @@ const InvestmentSchema = new mongoose.Schema({
     available: { type: String },
     roi: { type: String },
     terms: { type: String },
+    verifiedAt: { type: Date },
     ownerId: {
         type: mongoose.Types.ObjectId,
         ref: "users"
