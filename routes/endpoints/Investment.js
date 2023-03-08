@@ -109,6 +109,8 @@ let routes = (app) => {
         try {
             let investments = await Investment.find({ status: "active" }).sort({ createdAt: -1 })
                 .populate("category", "title")
+                .populate("ownerId", "name")
+                .populate("ownerCommitment")
             const page = parseInt(req.query.page) || 1;
             const pager = paginate(investments.length, page);
             const pageOfItems = investments.slice(pager.startIndex, pager.endIndex + 1);
@@ -126,6 +128,8 @@ let routes = (app) => {
         try {
             let investments = await Investment.find({ ownerId: req.user.id }).sort({ createdAt: -1 })
                 .populate("category", "title")
+                .populate("ownerId", "name")
+                .populate("ownerCommitment")
             return res.json(investments);
         }
         catch (err) {
@@ -156,6 +160,7 @@ let routes = (app) => {
             let investments = await Investment.find({ verified: req.query.verified })
                 .populate("category", "title")
                 .populate("ownerId", "name")
+                .populate("ownerCommitment")
             const page = parseInt(req.query.page) || 1;
             const pager = paginate(investments.length, page);
             const pageOfItems = investments.slice(pager.startIndex, pager.endIndex + 1);
@@ -172,6 +177,8 @@ let routes = (app) => {
         try {
             let investments = await Investment.find()
                 .populate("category", "title")
+                .populate("ownerId", "name")
+                .populate("ownerCommitment")
             return res.json(investments);
         }
         catch (err) {
@@ -187,6 +194,8 @@ let routes = (app) => {
             let investLowestBudget = await Investment.find().sort({ budget: 1 }).limit(1)
             let investROI = await Investment.find().sort({ roi: -1 }).limit(1)
                 .populate("category", "title")
+                .populate("ownerId", "name")
+                .populate("ownerCommitment")
             arr.push(investLatest[0], investHighestBudget[0], investLowestBudget[0], investROI[0])
             res.json(arr)
         }
@@ -221,6 +230,8 @@ let routes = (app) => {
         try {
             let investment = await Investment.findOne({ _id: req.params.id })
                 .populate("category", "title")
+                .populate("ownerId", "name")
+                .populate("ownerCommitment")
             res.json(investment)
         }
         catch (err) {
