@@ -15,6 +15,7 @@ let routes = (app) => {
             res.json({ msg: "Project Successfully Joined" })
         }
         catch (err) {
+            console.log(err)
             res.status(500).send(err)
         }
     });
