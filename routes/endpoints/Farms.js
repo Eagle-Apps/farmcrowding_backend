@@ -66,9 +66,15 @@ let routes = (app) => {
                     }
                     req.body.images = reqFiles;
                     try {
-                        const { images } = req.body;
+                        const { images, phone, userId, category } = req.body;
                         if (!images)
-                            return res.status(500).json({ msg: "Please Upload Farm Image" })
+                            return res.status(400).json({ msg: "Please Upload Farm Image" })
+                        if (!phone)
+                            return res.status(400).json({ msg: "Please include a valid phone number" })
+                        if (!userId)
+                            return res.status(400).json({ msg: "Invalid user" })
+                        if (!category)
+                            return res.status(400).json({ msg: "Please select a category" })
                         let newFarm = new Farm(req.body);
                         newFarm.userId = req.user.id
                         await newFarm.save()
