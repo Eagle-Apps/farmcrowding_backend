@@ -252,9 +252,10 @@ let routes = (app) => {
     //     return res.redirect('/payment-failed');
     // });
 
-    app.post('/payment', async (req, res) => {
+    app.post('/payment', auth, async (req, res) => {
         try {
             let payment = new Payment(req.body);
+            payment.userId = req.user.id
             await payment.save()
             res.json(payment)
         }
