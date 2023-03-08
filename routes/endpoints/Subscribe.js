@@ -4,7 +4,7 @@ const { auth } = require("../../middlewares/authorize");
 
 let routes = (app) => {
 
-    app.post('/subscribe', auth, async (req, res) => {
+    app.post('/investment-subscribe', auth, async (req, res) => {
         try {
             let subscribe = new Subscribe(req.body);
             subscribe.userId = req.user.id
