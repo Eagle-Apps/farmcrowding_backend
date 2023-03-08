@@ -118,6 +118,7 @@ let routes = (app) => {
             let investments = await Investment.find().sort({ createdAt: -1 })
                 .populate("category", "title")
                 .populate("ownerId", "name")
+                .populate("ownerCommitment")
             const page = parseInt(req.query.page) || 1;
             const pager = paginate(investments.length, page, 12);
             const pageOfItems = investments.slice(pager.startIndex, pager.endIndex + 1);
