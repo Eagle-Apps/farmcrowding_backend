@@ -80,8 +80,6 @@ let routes = (app) => {
                             return res.status(400).json({ msg: "Please include a description" })
                         if (!duration)
                             return res.status(400).json({ msg: "Please include Number of Days a Project is available for" })
-                        if (!req.user.id)
-                            return res.status(400).json({ msg: "Invalid user" })
                         if (!terms)
                             return res.status(400).json({ msg: "Please include Terms and Conditions" })
                         if (!roi)
