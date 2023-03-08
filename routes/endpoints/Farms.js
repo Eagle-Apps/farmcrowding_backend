@@ -71,7 +71,7 @@ let routes = (app) => {
                             return res.status(400).json({ msg: "Please Upload Farm Image" })
                         if (!phone)
                             return res.status(400).json({ msg: "Please include a valid phone number" })
-                        if (!userId)
+                        if (req.user.id)
                             return res.status(400).json({ msg: "Invalid user" })
                         if (!category)
                             return res.status(400).json({ msg: "Please select a category" })
