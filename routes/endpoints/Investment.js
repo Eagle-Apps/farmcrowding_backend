@@ -115,7 +115,7 @@ let routes = (app) => {
     // get all investments paged
     app.get('/investments', async (req, res) => {
         try {
-            let investments = await Investment.find()
+            let investments = await Investment.find().sort({ createdAt: -1 })
                 .populate("category", "title")
                 .populate("ownerId", "name")
             const page = parseInt(req.query.page) || 1;
