@@ -9,10 +9,7 @@ let routes = (app) => {
             let subscribe = new Subscribe(req.body);
             subscribe.userId = req.user.id
             let investment = await Investment.findOne({ _id: subscribe.investmentId })
-            let available = Number((investment.available.replaceAll(",", ""))) - Number((subscribe.commitment.replaceAll(",", "")))
-            console.log(available)
-            console.log(Number(investment.available.replaceAll(",", "")))
-            console.log(Number(subscribe.commitment.replaceAll(",", "")))
+            let available = Number((investment.available.split(",").join(""))) - Number((subscribe.commitment.split(",").join("")))
             await Investment.updateOne({ _id: subscribe.investmentId }, { available: Number(available).toLocaleString() })
             await subscribe.save()
             res.json({ msg: "Project Successfully Joined" })
