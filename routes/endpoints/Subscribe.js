@@ -4,12 +4,15 @@ const { auth } = require("../../middlewares/authorize");
 
 let routes = (app) => {
 
-    app.post('/investment-subscribe', auth, async (req, res) => {
+    app.post('/subscribe', auth, async (req, res) => {
         try {
             let subscribe = new Subscribe(req.body);
             subscribe.userId = req.user.id
             let investment = await Investment.findOne({ _id: subscribe.investmentId })
             let available = Number(investment.available.replaceAll(",", "")) - Number(subscribe.commitment.replaceAll(",", ""))
+            console.log(available)
+            console.log(Number(investment.available.replaceAll(",", "")))
+            console.log(Number(subscribe.commitment.replaceAll(",", "")))
             await Investment.updateOne({ _id: subscribe.investmentId }, { available: Number(available).toLocaleString() })
             await subscribe.save()
             res.json({ msg: "Project Successfully Joined" })
