@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema({
     address: { type: String, required: true },
     userName: { type: String, required: true, trim: true },
     role: { type: String, default: "user" },
+    country: { type: String },
     status: { type: String, default: "inactive" },
     investments: [{
         type: mongoose.Types.ObjectId,
