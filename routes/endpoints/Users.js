@@ -26,15 +26,18 @@ let routes = (app) => {
             if (!validateEmail(email))
                 return res.status(400).json({ msg: "Please enter a valid email address!" })
 
+            if (!validatePassword(password))
+                return res.status(400).json({ msg: "Password should contain at least one Uppercase, one Lowercase, one special character and one number at least" });
+
+            if (password.length < 8)
+                return res.status(400).json({ msg: "Password must be atleaast 8 characters long!" })
+
             const user_name = await User.findOne({ userName })
             if (user_name) return res.status(400).json({ msg: "This username is already taken!" })
 
             const user = await User.findOne({ email })
             if (user) return res.status(400).json({ msg: "This email already exists, please use another email address!" })
-
-            if (password.length < 8)
-                return res.status(400).json({ msg: "Password must be atleaast 8 characters long!" })
-
+           
             const passwordHash = await bcrypt.hash(password, 12)
             let name = firstname + " " + lastname;
             const newUser = {
@@ -144,6 +147,27 @@ let routes = (app) => {
             res.status(500).send(err)
             throw err
         }
+    });
+
+    // update dp
+    app.put('/profilepic/:id', async (req, res) => {
+        upload(req, res, async (err) => {
+            if (err) {
+                console.log(err);
+            } else {
+                if (req.file) {
+                    req.body.image = '/' + req.file.path;
+                    try {
+                        let update = req.body;
+                        let user = await User.findOneAndUpdate({ _id: req.params.id }, update, { returnOriginal: false });
+                        return res.json(user)
+                    }
+                    catch (err) {
+                        res.status(500).send(err);
+                    }
+                }
+            }
+        });
     });
 
     // to suspend user
@@ -303,6 +327,11 @@ let routes = (app) => {
 function validateEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
+};
+
+function validatePassword(password) {
+    const re = /^(?=.* [a - z])(?=.* [A - Z])(?=.*\d)(?=.* [@$!%*?&])[A - Za - z\d@$!%*?&]{ 8,}$/;
+    return re.test(password);
 };
 
 function createAccessToken(payload) {
