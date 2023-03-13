@@ -176,7 +176,7 @@ let routes = (app) => {
     });
 
     // update dp
-    app.put('/profilepic/:id', auth, async (req, res) => {
+    app.put('/profilepic', auth, async (req, res) => {
         upload(req, res, async (err) => {
             if (err) {
                 console.log(err);
@@ -184,11 +184,8 @@ let routes = (app) => {
                 if (req.file) {
                     var locaFilePath = req.file.path;
                     var result = await uploadToCloudinary(locaFilePath)
-                    console.log(result.url)
-                    req.body.image = result.url;
                     try {
-                        let update = req.body;
-                        let user = await User.findOneAndUpdate({ _id: req.user.id }, update, { returnOriginal: false });
+                        let user = await User.findOneAndUpdate({ _id: req.user.id }, { image: result.url }, { returnOriginal: false });
                         return res.json(user)
                     }
                     catch (err) {
