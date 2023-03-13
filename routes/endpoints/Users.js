@@ -4,6 +4,7 @@ const multer = require('multer');
 const bcrypt = require('bcrypt');
 const paginate = require('jw-paginate');
 const jwt = require("jsonwebtoken");
+const cloudinary = require('cloudinary').v2;
 const { auth, isAdmin } = require("../../middlewares/authorize")
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -13,7 +14,32 @@ const storage = multer.diskStorage({
         cb(null, new Date().getMilliseconds() + file.originalname);
     }
 });
+
+const fs = require('fs');
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET
+});
 const upload = multer({ storage: storage }).single('image');
+
+async function uploadToCloudinary(locaFilePath) {
+
+    var mainFolderName = "ndembele"
+    var filePathOnCloudinary = mainFolderName + "/" + locaFilePath;
+    return cloudinary.uploader.upload(locaFilePath)
+        .then((result) => {
+            fs.unlinkSync(locaFilePath)
+            return {
+                message: "Success",
+                url: result.url
+            };
+        }).catch((error) => {
+            fs.unlinkSync(locaFilePath)
+            return { message: "Fail", };
+        });
+};
 
 let routes = (app) => {
     app.post("/register", async (req, res) => {
@@ -26,8 +52,9 @@ let routes = (app) => {
             if (!validateEmail(email))
                 return res.status(400).json({ msg: "Please enter a valid email address!" })
 
-            if (!validatePassword(password))
-                return res.status(400).json({ msg: "Password should contain at least one Uppercase, one Lowercase, one special character and one number at least" });
+            if (!validatePassword(password)) {
+                return res.status(400).json({ msg: "Password should be Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:" });
+            }
 
             if (password.length < 8)
                 return res.status(400).json({ msg: "Password must be atleaast 8 characters long!" })
@@ -37,7 +64,7 @@ let routes = (app) => {
 
             const user = await User.findOne({ email })
             if (user) return res.status(400).json({ msg: "This email already exists, please use another email address!" })
-           
+
             const passwordHash = await bcrypt.hash(password, 12)
             let name = firstname + " " + lastname;
             const newUser = {
@@ -54,7 +81,6 @@ let routes = (app) => {
 
         }
         catch (err) {
-            console.log('error o')
             return res.status(500).json({ msg: err.message });
         }
 
@@ -150,16 +176,19 @@ let routes = (app) => {
     });
 
     // update dp
-    app.put('/profilepic/:id', async (req, res) => {
+    app.put('/profilepic/:id', auth, async (req, res) => {
         upload(req, res, async (err) => {
             if (err) {
                 console.log(err);
             } else {
                 if (req.file) {
-                    req.body.image = '/' + req.file.path;
+                    var locaFilePath = req.file.path;
+                    var result = await uploadToCloudinary(locaFilePath)
+                    console.log(result.url)
+                    req.body.image = result.url;
                     try {
                         let update = req.body;
-                        let user = await User.findOneAndUpdate({ _id: req.params.id }, update, { returnOriginal: false });
+                        let user = await User.findOneAndUpdate({ _id: req.user.id }, update, { returnOriginal: false });
                         return res.json(user)
                     }
                     catch (err) {
@@ -210,27 +239,6 @@ let routes = (app) => {
         catch (err) {
             res.status(500).send(err)
         }
-    });
-
-    // update dp
-    app.put('/profilepic/:id', async (req, res) => {
-        upload(req, res, async (err) => {
-            if (err) {
-                console.log(err);
-            } else {
-                if (req.file) {
-                    req.body.image = '/' + req.file.path;
-                    try {
-                        let update = req.body;
-                        let user = await User.findOneAndUpdate({ _id: req.params.id }, update, { returnOriginal: false });
-                        return res.json(user)
-                    }
-                    catch (err) {
-                        res.status(500).send(err);
-                    }
-                }
-            }
-        });
     });
 
     app.delete('/user/:id', async (req, res) => {
@@ -330,12 +338,12 @@ function validateEmail(email) {
 };
 
 function validatePassword(password) {
-    const re = /^(?=.* [a - z])(?=.* [A - Z])(?=.*\d)(?=.* [@$!%*?&])[A - Za - z\d@$!%*?&]{ 8,}$/;
+    const re = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-_]).{8,}$/;
     return re.test(password);
 };
 
 function createAccessToken(payload) {
-    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' })
+    return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '20m' })
 };
 
 function createRefreshToken(payload) {
