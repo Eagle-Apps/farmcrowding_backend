@@ -1,5 +1,5 @@
-FROM node:16
-WORKDIR /app
+FROM node:16.18.0
+WORKDIR /server.js
 
 COPY package.json .
 
