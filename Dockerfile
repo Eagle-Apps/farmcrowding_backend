@@ -1,16 +1,17 @@
 FROM node:16.18.0
-RUN mkdir -p /app
-
-COPY . .
+# FROM node:16-alpine
+RUN npm install -g nodemon
 
 WORKDIR /app
 
-# COPY package.json .
-
-
+COPY package.json .
 
 RUN npm install
 
+COPY . .
+
 EXPOSE 4400
 
-CMD ["npm", "start"]
+# CMD ["node", "server.js"]
+# CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
